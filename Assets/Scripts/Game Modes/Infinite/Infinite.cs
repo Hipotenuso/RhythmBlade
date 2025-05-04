@@ -18,13 +18,22 @@ public class Infinite : MonoBehaviour
     public Sprite good;
     public Sprite great;
     public Sprite perfect;
-    [Header("Values")]
+    [Header("Int Values")]
     public int _index;
     public int value;
     public int actualValue;
     public int activeEvents;
     public int attack = 0;
     public int misses = 0;
+    [Header("Float Values")]
+    public float actualRando;
+    public float Rando1;
+    public float Rando2;
+    public float Rando3;
+    public float gap1;
+    public float gap2;
+    public float gap3;
+    public float actualGap;
     [Header("SO")]
     public SOInt pontos;
     public SOInt perfeitos;
@@ -38,6 +47,7 @@ public class Infinite : MonoBehaviour
     public TextMeshProUGUI textGreat;
     public TextMeshProUGUI textGood;
     public TextMeshProUGUI textMiss;
+    public TextMeshProUGUI textRecord;
     void Start()
     {
         if(rhythm == null) rhythm = FindAnyObjectByType<Rhythm>();
@@ -47,6 +57,7 @@ public class Infinite : MonoBehaviour
         Interval();
         ResetInfos();
         LoadScore();
+        RandosAtt();
     }
   private void RandomBox()
     {
@@ -58,10 +69,9 @@ public class Infinite : MonoBehaviour
     {
         if(activeEvents == 0)
         {
-            float gap = Random.Range(0.1f, 0.4f);
             if(actualBox1 == null || attack == 0)
             {
-                Invoke(nameof(Event), gap);
+                Invoke(nameof(Event), actualGap);
             }
         }
         else
@@ -75,33 +85,39 @@ public class Infinite : MonoBehaviour
         RandomBox();
         lights = StartCoroutine(Lights());
     }
+    private void RandosAtt()
+    {
+        Rando1 = Random.Range(0.5f, 0.7f);
+        Rando2 = Random.Range(0.25f, 0.45f);
+        Rando3 = Random.Range(0.12f, 0.22f);
+        gap1 = Random.Range(0.8f, 1.2f);
+        gap2 = Random.Range(0.2f, 0.6f);
+        gap3 = Random.Range(0.02f, 0.3f);
+    }
     IEnumerator Lights()
     {
-        float rando1 = Random.Range(0.5f, 0.7f);
-        float rando2 = Random.Range(0.2f, 0.4f);
-        float rando3 = Random.Range(0.2f, 1f);
         actualBox1.sprite = miss;
         value = 0;
         if (attack != 1)
-            yield return new WaitForSeconds(rando1);
+            yield return new WaitForSeconds(actualRando);
 
         actualBox1.sprite = good;
         value = 2;
         if (attack != 1)
-            yield return new WaitForSeconds(rando2);
+            yield return new WaitForSeconds(actualRando);
 
         actualBox1.sprite = great;
         value = 8;
         if (attack != 1)
-            yield return new WaitForSeconds(rando3);
+            yield return new WaitForSeconds(actualRando);
 
         actualBox1.sprite = perfect;
         value = 32;
         if (attack != 1)
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(actualRando);
 
         erros.value += 1;
-        rhythm.charge -= 10;
+        rhythm.charge -= 5;
         UpdateUI();
         EndEvent();
 }
@@ -126,30 +142,24 @@ public class Infinite : MonoBehaviour
         }
         if(actualBox1.sprite == good)
         {
+            rhythm.charge += 2;
             bons.value++;
         }
         if(actualBox1.sprite == great)
         {
+            rhythm.charge += 4;
             otimos.value++;
         }
         if(actualBox1.sprite == perfect)
         {
+            rhythm.charge += 8;
             perfeitos.value++;
         }
+        pontos.value += value*box.stageBonus;
         attack = 1;
         EndEvent();
-        pontos.value += value*box.stageBonus;
         ResetValue();
         UpdateUI();
-    }
-    private void Miss()
-    {
-        if(misses != 0)
-        {
-            rhythm.charge -= 10;
-            UpdateUI();
-            misses -= 1;
-        }
     }
     public void ResetInfos()
     {
@@ -184,6 +194,8 @@ public class Infinite : MonoBehaviour
         if(pontos.value >= record.value)
         {
             record.value = pontos.value;
+            textRecord.text = record.value.ToString();
+            SaveScore();
         }
         else
         {
@@ -193,5 +205,10 @@ public class Infinite : MonoBehaviour
     public void LoadScore()
     {
         record.value = PlayerPrefs.GetInt("HighScore", record.value);
+        textRecord.text = record.value.ToString();
+    }
+    public void SaveScore()
+    {
+        PlayerPrefs.SetInt("HighScore", record.value);
     }
 }

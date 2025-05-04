@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 358e092482ff51843bad552f2a365bd7, type: 3}
   m_Name: perfect
   m_EditorClassIdentifier: 
-  value: 2
+  value: 0

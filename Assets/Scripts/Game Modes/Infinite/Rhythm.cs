@@ -169,6 +169,8 @@ public class Rhythm : MonoBehaviour
             _spriteRender.color = new Color32(40,40,40,255);
             box.stageBonus = 1;
             combo.text = "x1".ToString();
+            infinite.actualRando = infinite.Rando1;
+            infinite.actualGap = infinite.gap1;
         }
         if(charge >= 5)
         {
@@ -179,6 +181,8 @@ public class Rhythm : MonoBehaviour
             _spriteRender.color = new Color32(0,87,80,255);
             box.stageBonus = 2;
             combo.text = "x2".ToString();
+            infinite.actualRando = infinite.Rando2;
+            infinite.actualGap = infinite.gap2;
         }
         if(charge >= 30)
         {
@@ -189,6 +193,8 @@ public class Rhythm : MonoBehaviour
             _spriteRender.color = new Color32(0,255,255,255);
             box.stageBonus = 4;
             combo.text = "x4".ToString();
+            infinite.actualRando = infinite.Rando3;
+            infinite.actualGap = infinite.gap3;
         }
     }                                      //This is a test function, now only avalible in Rhythm mode.
     //private void LostCharge()
